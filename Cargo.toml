@@ -24,4 +24,4 @@ env_logger = "0.6.1"
 default = []
 # If same name as dependencies can be used, change this.
 # https://github.com/rust-lang/cargo/issues/4911
-actix-utils = ["actix", "actix-web"]
+actix_utils = ["actix", "actix-web"]

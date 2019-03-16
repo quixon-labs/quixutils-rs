@@ -1,8 +1,10 @@
-use futures::future::{err, ok, result};
+use super::{ApiError, ApiResult, ErrorData, ErrorItems};
+use futures::future::ok;
 use futures::{Async, Future as StdFuture};
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
+use std::ops::{Deref, DerefMut};
 
-pub struct ApiFuture<T: Serialize + 'static, D: ErrorData = DefaultApiErrorData>(
+pub struct ApiFuture<T: Serialize + 'static, D: ErrorData = ErrorItems>(
     Box<StdFuture<Item = ApiResult<T, D>, Error = ApiError<D>>>,
 );
 

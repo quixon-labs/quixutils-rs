@@ -1,15 +1,12 @@
-use failure::{Backtrace, Context, Error, Fail};
-use serde::{Deserialize, Serialize};
+use failure::{Error, Fail};
+use serde::Serialize;
 use std::collections::BTreeMap;
-use std::error::Error as StdError;
 use std::fmt::{self, Debug, Display, Formatter};
-use std::ops::{Deref, DerefMut, Try};
-
-type DefaultApiErrorData = ErrorItems;
+use std::ops::Try;
 
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub enum ApiResult<T: Serialize, E: ErrorData = DefaultApiErrorData> {
+pub enum ApiResult<T: Serialize, E: ErrorData = ErrorItems> {
     Ok(T),
     Err(ApiError<E>),
 }

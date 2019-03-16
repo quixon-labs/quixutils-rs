@@ -1,21 +1,19 @@
-//! actix features
-#![feature("actix")]
-
-use actix_web::dev::AsyncResult;
+use super::{ApiError, ApiResult, ErrorData};
 use actix_web::error::Error as ActixError;
 use actix_web::http::StatusCode;
 use actix_web::{HttpRequest, HttpResponse, Responder, ResponseError};
+use serde::Serialize;
 
 impl<D: ErrorData> From<ActixError> for ApiError<D> {
     fn from(error: ActixError) -> Self {
-        let f = format_err!("{:?}", error);
+        let f = failure::format_err!("{:?}", error);
         ApiError::Internal { error: f }
     }
 }
 
 impl<D: ErrorData> From<::actix::MailboxError> for ApiError<D> {
     fn from(error: ::actix::MailboxError) -> Self {
-        let f = format_err!("{:?}", error);
+        let f = failure::format_err!("{:?}", error);
         ApiError::Internal { error: f }
     }
 }
@@ -55,7 +53,7 @@ impl<D: ErrorData> ResponseError for ApiError<D> {
             ApiError::BadGateway => HttpResponse::new(StatusCode::BAD_GATEWAY),
             ApiError::GatewayTimeout => HttpResponse::new(StatusCode::GATEWAY_TIMEOUT),
             ApiError::Internal { error: e } => {
-                error!("{:?}", e);
+                log::error!("{:?}", e);
                 HttpResponse::new(StatusCode::INTERNAL_SERVER_ERROR)
             }
             ApiError::Unknown => HttpResponse::new(StatusCode::INTERNAL_SERVER_ERROR),
