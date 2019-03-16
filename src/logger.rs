@@ -1,10 +1,10 @@
-use log::LevelFilter;
-use std::io::prelude::*;
 use chrono::prelude::*;
-use std::str::FromStr;
-use log::Record;
 use env_logger::fmt::Formatter;
+use log::LevelFilter;
+use log::Record;
 use std::io;
+use std::io::prelude::*;
+use std::str::FromStr;
 
 pub fn init(verbosity: usize) {
     use env_logger::*;
@@ -44,7 +44,9 @@ pub fn init(verbosity: usize) {
     builder.init();
 }
 
-fn get_formatter(ts_local: bool) -> impl Fn(&mut Formatter, &Record) -> io::Result<()> + Sync + Send + 'static {
+fn get_formatter(
+    ts_local: bool,
+) -> impl Fn(&mut Formatter, &Record) -> io::Result<()> + Sync + Send + 'static {
     move |buf: &mut Formatter, record: &Record| {
         use env_logger::fmt::Color;
 
@@ -60,11 +62,14 @@ fn get_formatter(ts_local: bool) -> impl Fn(&mut Formatter, &Record) -> io::Resu
         } else {
             Utc::now().to_rfc3339_opts(SecondsFormat::Millis, true)
         };
-        writeln!(buf, "{} {} [{}] {}",
-                 lvl_style.value(l),
-                 ts_style.value(ts),
-                 path_style.value(record.target()),
-                 record.args())
+        writeln!(
+            buf,
+            "{} {} [{}] {}",
+            lvl_style.value(l),
+            ts_style.value(ts),
+            path_style.value(record.target()),
+            record.args()
+        )
     }
 }
 

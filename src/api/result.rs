@@ -1,8 +1,8 @@
 use failure::{Backtrace, Context, Error, Fail};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
-use std::fmt::{self, Debug, Display, Formatter};
 use std::error::Error as StdError;
+use std::fmt::{self, Debug, Display, Formatter};
 use std::ops::{Deref, DerefMut, Try};
 
 type DefaultApiErrorData = ErrorItems;
@@ -45,7 +45,7 @@ impl<T: Serialize, E: ErrorData> ApiResult<T, E> {
     pub fn is_ok(&self) -> bool {
         match *self {
             ApiResult::Ok(_) => true,
-            ApiResult::Err(_) => false
+            ApiResult::Err(_) => false,
         }
     }
 
@@ -57,7 +57,7 @@ impl<T: Serialize, E: ErrorData> ApiResult<T, E> {
     #[allow(dead_code)]
     pub fn ok(self) -> Option<T> {
         match self {
-            ApiResult::Ok(x)  => Some(x),
+            ApiResult::Ok(x) => Some(x),
             ApiResult::Err(_) => None,
         }
     }
@@ -65,29 +65,36 @@ impl<T: Serialize, E: ErrorData> ApiResult<T, E> {
     #[allow(dead_code)]
     pub fn err(self) -> Option<ApiError<E>> {
         match self {
-            ApiResult::Ok(_)  => None,
+            ApiResult::Ok(_) => None,
             ApiResult::Err(x) => Some(x),
         }
     }
 
     #[allow(dead_code)]
-    pub fn map<U: Serialize, F: FnOnce(T) -> U>(self, op: F) -> ApiResult<U,E> {
+    pub fn map<U: Serialize, F: FnOnce(T) -> U>(self, op: F) -> ApiResult<U, E> {
         match self {
             ApiResult::Ok(t) => ApiResult::Ok(op(t)),
-            ApiResult::Err(e) => ApiResult::Err(e)
+            ApiResult::Err(e) => ApiResult::Err(e),
         }
     }
 
     #[allow(dead_code)]
-    pub fn map_or_else<U: Serialize, M: FnOnce(T) -> U, F: FnOnce(ApiError<E>) -> U>(self, fallback: F, map: M) -> U {
+    pub fn map_or_else<U: Serialize, M: FnOnce(T) -> U, F: FnOnce(ApiError<E>) -> U>(
+        self,
+        fallback: F,
+        map: M,
+    ) -> U {
         self.map(map).unwrap_or_else(fallback)
     }
 
     #[allow(dead_code)]
-    pub fn map_err<F: ErrorData, O: FnOnce(ApiError<E>) -> ApiError<F>>(self, op: O) -> ApiResult<T,F> {
+    pub fn map_err<F: ErrorData, O: FnOnce(ApiError<E>) -> ApiError<F>>(
+        self,
+        op: O,
+    ) -> ApiResult<T, F> {
         match self {
             ApiResult::Ok(t) => ApiResult::Ok(t),
-            ApiResult::Err(e) => ApiResult::Err(op(e))
+            ApiResult::Err(e) => ApiResult::Err(op(e)),
         }
     }
 
@@ -116,7 +123,10 @@ impl<T: Serialize, E: ErrorData> ApiResult<T, E> {
     }
 
     #[allow(dead_code)]
-    pub fn or_else<F: ErrorData, O: FnOnce(ApiError<E>) -> ApiResult<T, F>>(self, op: O) -> ApiResult<T, F> {
+    pub fn or_else<F: ErrorData, O: FnOnce(ApiError<E>) -> ApiResult<T, F>>(
+        self,
+        op: O,
+    ) -> ApiResult<T, F> {
         match self {
             ApiResult::Ok(t) => ApiResult::Ok(t),
             ApiResult::Err(e) => op(e),
@@ -127,7 +137,7 @@ impl<T: Serialize, E: ErrorData> ApiResult<T, E> {
     pub fn unwrap_or(self, optb: T) -> T {
         match self {
             ApiResult::Ok(t) => t,
-            ApiResult::Err(_) => optb
+            ApiResult::Err(_) => optb,
         }
     }
 
@@ -135,7 +145,7 @@ impl<T: Serialize, E: ErrorData> ApiResult<T, E> {
     pub fn unwrap_or_else<F: FnOnce(ApiError<E>) -> T>(self, op: F) -> T {
         match self {
             ApiResult::Ok(t) => t,
-            ApiResult::Err(e) => op(e)
+            ApiResult::Err(e) => op(e),
         }
     }
 
@@ -180,7 +190,10 @@ pub enum ApiError<D: ErrorData = ()> {
     #[allow(dead_code)]
     GatewayTimeout,
     #[allow(dead_code)]
-    Internal { #[serde(skip)] error: Error },
+    Internal {
+        #[serde(skip)]
+        error: Error,
+    },
     #[allow(dead_code)]
     Unknown,
 }
@@ -194,52 +207,37 @@ impl<D: ErrorData> From<Error> for ApiError<D> {
 impl<D: ErrorData> Display for ApiError<D> {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match self {
-            ApiError::UserError(d) => {
-                writeln!(f, "user error: {:?}", d)
-            },
+            ApiError::UserError(d) => writeln!(f, "user error: {:?}", d),
             ApiError::BadRequest(o) => {
                 if let Some(d) = o {
                     writeln!(f, "error: bad request: {:?}", d)
                 } else {
                     writeln!(f, "error: bad request")
                 }
-            },
+            }
             ApiError::UnprocessableEntity(o) => {
                 if let Some(d) = o {
                     writeln!(f, "error: unprocessable entity: {:?}", d)
                 } else {
                     writeln!(f, "error: unprocessable entity")
                 }
-            },
-            ApiError::TooManyRequests { retry_after_secs: r } => {
+            }
+            ApiError::TooManyRequests {
+                retry_after_secs: r,
+            } => {
                 if let Some(t) = r {
                     writeln!(f, "error: too many requests - retry_in: {:?}", t)
                 } else {
                     writeln!(f, "error: too many requests")
                 }
-            },
-            ApiError::Unauthorized => {
-                writeln!(f, "error: unauthorized")
-            },
-            ApiError::Forbidden => {
-                writeln!(f, "error: forbidden")
-            },
-            ApiError::NotFound => {
-                writeln!(f, "error: not found")
-            },
-            ApiError::BadGateway => {
-                writeln!(f, "error: bad gateway")
-            },
-            ApiError::GatewayTimeout => {
-                writeln!(f, "error: gateway timeout")
-            },
-            ApiError::Internal { error: e } => {
-                writeln!(f, "error: {:?}", e)
-            },
-            ApiError::Unknown => {
-                writeln!(f, "unknown error")
             }
+            ApiError::Unauthorized => writeln!(f, "error: unauthorized"),
+            ApiError::Forbidden => writeln!(f, "error: forbidden"),
+            ApiError::NotFound => writeln!(f, "error: not found"),
+            ApiError::BadGateway => writeln!(f, "error: bad gateway"),
+            ApiError::GatewayTimeout => writeln!(f, "error: gateway timeout"),
+            ApiError::Internal { error: e } => writeln!(f, "error: {:?}", e),
+            ApiError::Unknown => writeln!(f, "unknown error"),
         }
     }
 }
-

@@ -1,15 +1,13 @@
-use failure::{Fail, Error, Context, Backtrace};
-use std::fmt::{self, Display, Formatter};
-use std::error::Error as StdError;
-use futures::Future as StdFuture;
+use failure::Error;
 use futures::Async;
-use std::result::Result as StdResult;
+use futures::Future as StdFuture;
 use std::ops::{Deref, DerefMut};
+use std::result::Result as StdResult;
 
 #[allow(dead_code)]
-pub type Result<T, E=Error> = StdResult<T, E>;
+pub type Result<T, E = Error> = StdResult<T, E>;
 #[allow(dead_code)]
-pub type Future<T, E=Error> = StdFuture<Item=T, Error=E>;
+pub type Future<T, E = Error> = StdFuture<Item = T, Error = E>;
 
 #[allow(dead_code)]
 pub struct FutureBox<T: 'static, E: 'static = Error>(Box<Future<T, E>>);
@@ -24,7 +22,7 @@ impl<T: 'static, E: 'static> StdFuture for FutureBox<T, E> {
 }
 
 impl<T: 'static, E: 'static> Deref for FutureBox<T, E> {
-    type Target = StdFuture<Item=T, Error=E>;
+    type Target = StdFuture<Item = T, Error = E>;
     fn deref(&self) -> &Self::Target {
         &self.0
     }
@@ -35,4 +33,3 @@ impl<T: 'static, E: 'static> DerefMut for FutureBox<T, E> {
         &mut self.0
     }
 }
-

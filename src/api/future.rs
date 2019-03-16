@@ -1,13 +1,16 @@
-use futures::{Future as StdFuture, Async};
 use futures::future::{err, ok, result};
+use futures::{Async, Future as StdFuture};
+use serde::{Deserialize, Serialize};
 
-pub struct ApiFuture<
-    T: Serialize + 'static,
-    D: ErrorData = DefaultApiErrorData>(Box<StdFuture<Item=ApiResult<T, D>, Error=ApiError<D>>>);
+pub struct ApiFuture<T: Serialize + 'static, D: ErrorData = DefaultApiErrorData>(
+    Box<StdFuture<Item = ApiResult<T, D>, Error = ApiError<D>>>,
+);
 
 impl<T: Serialize, D: ErrorData> ApiFuture<T, D> {
     #[allow(dead_code)]
-    pub fn new<F: StdFuture<Item=ApiResult<T, D>, Error=ApiError<D>> + 'static>(future: F) -> Self {
+    pub fn new<F: StdFuture<Item = ApiResult<T, D>, Error = ApiError<D>> + 'static>(
+        future: F,
+    ) -> Self {
         ApiFuture(Box::new(future))
     }
 
@@ -29,8 +32,10 @@ impl<T: Serialize, D: ErrorData> ApiFuture<T, D> {
     }
 
     #[allow(dead_code)]
-    pub fn from_boxed<F: StdFuture<Item=ApiResult<T, D>, Error=ApiError<D>> + 'static>(f: Box<F>) -> Self {
-        ApiFuture(f as Box<StdFuture<Item=ApiResult<T, D>, Error=ApiError<D>>>)
+    pub fn from_boxed<F: StdFuture<Item = ApiResult<T, D>, Error = ApiError<D>> + 'static>(
+        f: Box<F>,
+    ) -> Self {
+        ApiFuture(f as Box<StdFuture<Item = ApiResult<T, D>, Error = ApiError<D>>>)
     }
 }
 
@@ -41,7 +46,8 @@ impl<T: Serialize, D: ErrorData> From<ApiResult<T, D>> for ApiFuture<T, D> {
 }
 
 impl<T: Serialize, D: ErrorData, F> From<Box<F>> for ApiFuture<T, D>
-    where F: StdFuture<Item=ApiResult<T, D>, Error=ApiError<D>> + 'static
+where
+    F: StdFuture<Item = ApiResult<T, D>, Error = ApiError<D>> + 'static,
 {
     fn from(f: Box<F>) -> Self {
         ApiFuture::from_boxed(f)
@@ -49,7 +55,7 @@ impl<T: Serialize, D: ErrorData, F> From<Box<F>> for ApiFuture<T, D>
 }
 
 impl<T: Serialize + 'static, D: ErrorData> Deref for ApiFuture<T, D> {
-    type Target = StdFuture<Item=ApiResult<T, D>, Error=ApiError<D>>;
+    type Target = StdFuture<Item = ApiResult<T, D>, Error = ApiError<D>>;
 
     fn deref(&self) -> &Self::Target {
         &self.0
