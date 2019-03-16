@@ -3,6 +3,13 @@ name = "quixutils"
 version = "0.1.0"
 authors = ["Prasanna Loganathar <pvl@prasannavl.com>"]
 edition = "2018"
+description = "Common helpers and utils"
+homepage = "https://github.com/quixon-labs/quixutils-rs"
+repository = "https://github.com/quixon-labs/quixutils-rs"
+readme = "README.md"
+keywords = [ "bootstrap", "helpers", "utils" ]
+categories = [ "rust-patterns" ]
+license = "Apache-2.0"
 
 [dependencies]
 log = "0.4.6"
