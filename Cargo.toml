@@ -1,0 +1,7 @@
+[package]
+name = "quixutils"
+version = "0.1.0"
+authors = ["Prasanna Loganathar <pvl@prasannavl.com>"]
+edition = "2018"
+
+[dependencies]
