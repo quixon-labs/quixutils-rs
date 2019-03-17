@@ -31,20 +31,6 @@ where
 
 // Errors impl
 
-impl<D: ErrorData> From<ActixError> for ApiError<D> {
-    fn from(error: ActixError) -> Self {
-        let f = failure::format_err!("{:?}", error);
-        ApiError::Internal { error: f }
-    }
-}
-
-impl<D: ErrorData> From<::actix::MailboxError> for ApiError<D> {
-    fn from(error: ::actix::MailboxError) -> Self {
-        let f = failure::format_err!("{:?}", error);
-        ApiError::Internal { error: f }
-    }
-}
-
 impl<D: ErrorData> ResponseError for ApiError<D> {
     fn error_response(&self) -> HttpResponse {
         match self {
@@ -85,5 +71,28 @@ impl<D: ErrorData> ResponseError for ApiError<D> {
             }
             ApiError::Unknown => HttpResponse::new(StatusCode::INTERNAL_SERVER_ERROR),
         }
+    }
+}
+
+// From errors
+
+impl<D: ErrorData> From<ActixError> for ApiError<D> {
+    fn from(error: ActixError) -> Self {
+        let f = failure::format_err!("{:?}", error);
+        ApiError::Internal { error: f }
+    }
+}
+
+impl<D: ErrorData> From<actix::MailboxError> for ApiError<D> {
+    fn from(error: ::actix::MailboxError) -> Self {
+        let f = failure::format_err!("{:?}", error);
+        ApiError::Internal { error: f }
+    }
+}
+
+impl <D: ErrorData> From<actix_web::error::JsonPayloadError> for ApiError<D> {
+    fn from(error: ::actix_web::error::JsonPayloadError) -> ApiError<D> {
+        let f = format_err!("{:?}", error);
+        ApiError::Internal { error: f }
     }
 }
