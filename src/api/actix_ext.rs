@@ -92,7 +92,7 @@ impl<D: ErrorData> From<actix::MailboxError> for ApiError<D> {
 
 impl<D: ErrorData> From<actix_web::error::JsonPayloadError> for ApiError<D> {
     fn from(error: ::actix_web::error::JsonPayloadError) -> ApiError<D> {
-        let f = format_err!("{:?}", error);
+        let f = failure::format_err!("{:?}", error);
         ApiError::Internal { error: f }
     }
 }
