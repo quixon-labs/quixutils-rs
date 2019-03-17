@@ -10,8 +10,8 @@ pub fn init(verbosity: usize) {
     use env_logger::*;
     use std::env;
 
-    const LOG_LEVEL_ENV: &'static str = "LOG_LEVEL";
-    const LOG_LOCALTIME_ENV: &'static str = "LOG_LOCALTIME";
+    const LOG_LEVEL_ENV: &str = "LOG_LEVEL";
+    const LOG_LOCALTIME_ENV: &str = "LOG_LOCALTIME";
 
     let mut env = Env::new();
     let mut has_opts = false;
