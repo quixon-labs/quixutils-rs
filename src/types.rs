@@ -4,12 +4,8 @@ use futures::Future as StdFuture;
 use std::ops::{Deref, DerefMut};
 use std::result::Result as StdResult;
 
-#[allow(dead_code)]
 pub type Result<T, E = Error> = StdResult<T, E>;
-#[allow(dead_code)]
 pub type Future<T, E = Error> = StdFuture<Item = T, Error = E>;
-
-#[allow(dead_code)]
 pub struct FutureBox<T: 'static, E: 'static = Error>(Box<Future<T, E>>);
 
 impl<T: 'static, E: 'static> StdFuture for FutureBox<T, E> {
