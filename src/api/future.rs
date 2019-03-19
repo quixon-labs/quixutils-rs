@@ -9,31 +9,26 @@ pub struct ApiFuture<T: Serialize + 'static, D: ErrorData = ErrorItems>(
 );
 
 impl<T: Serialize, D: ErrorData> ApiFuture<T, D> {
-    #[allow(dead_code)]
     pub fn new<F: StdFuture<Item = ApiResult<T, D>, Error = ApiError<D>> + 'static>(
         future: F,
     ) -> Self {
         ApiFuture(Box::new(future))
     }
 
-    #[allow(dead_code)]
     pub fn err<E: Into<ApiError<D>>>(error: E) -> Self {
         let res = ApiResult::Err(error.into());
         ApiFuture::result(res)
     }
 
-    #[allow(dead_code)]
     pub fn ok(data: T) -> Self {
         let res = ApiResult::Ok(data);
         ApiFuture::result(res)
     }
 
-    #[allow(dead_code)]
     pub fn result(r: ApiResult<T, D>) -> Self {
         ApiFuture::new(ok(r))
     }
 
-    #[allow(dead_code)]
     pub fn from_boxed<F: StdFuture<Item = ApiResult<T, D>, Error = ApiError<D>> + 'static>(
         f: Box<F>,
     ) -> Self {

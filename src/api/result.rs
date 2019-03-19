@@ -38,7 +38,6 @@ impl<T: Serialize, E: ErrorData> Try for ApiResult<T, E> {
 }
 
 impl<T: Serialize, E: ErrorData> ApiResult<T, E> {
-    #[allow(dead_code)]
     pub fn is_ok(&self) -> bool {
         match *self {
             ApiResult::Ok(_) => true,
@@ -46,12 +45,10 @@ impl<T: Serialize, E: ErrorData> ApiResult<T, E> {
         }
     }
 
-    #[allow(dead_code)]
     pub fn is_err(&self) -> bool {
         !self.is_ok()
     }
 
-    #[allow(dead_code)]
     pub fn ok(self) -> Option<T> {
         match self {
             ApiResult::Ok(x) => Some(x),
@@ -59,7 +56,6 @@ impl<T: Serialize, E: ErrorData> ApiResult<T, E> {
         }
     }
 
-    #[allow(dead_code)]
     pub fn err(self) -> Option<ApiError<E>> {
         match self {
             ApiResult::Ok(_) => None,
@@ -67,7 +63,6 @@ impl<T: Serialize, E: ErrorData> ApiResult<T, E> {
         }
     }
 
-    #[allow(dead_code)]
     pub fn map<U: Serialize, F: FnOnce(T) -> U>(self, op: F) -> ApiResult<U, E> {
         match self {
             ApiResult::Ok(t) => ApiResult::Ok(op(t)),
@@ -75,7 +70,6 @@ impl<T: Serialize, E: ErrorData> ApiResult<T, E> {
         }
     }
 
-    #[allow(dead_code)]
     pub fn map_or_else<U: Serialize, M: FnOnce(T) -> U, F: FnOnce(ApiError<E>) -> U>(
         self,
         fallback: F,
@@ -84,7 +78,6 @@ impl<T: Serialize, E: ErrorData> ApiResult<T, E> {
         self.map(map).unwrap_or_else(fallback)
     }
 
-    #[allow(dead_code)]
     pub fn map_err<F: ErrorData, O: FnOnce(ApiError<E>) -> ApiError<F>>(
         self,
         op: O,
@@ -95,7 +88,6 @@ impl<T: Serialize, E: ErrorData> ApiResult<T, E> {
         }
     }
 
-    #[allow(dead_code)]
     pub fn and<U: Serialize>(self, res: ApiResult<U, E>) -> ApiResult<U, E> {
         match self {
             ApiResult::Ok(_) => res,
@@ -103,7 +95,6 @@ impl<T: Serialize, E: ErrorData> ApiResult<T, E> {
         }
     }
 
-    #[allow(dead_code)]
     pub fn and_then<U: Serialize, F: FnOnce(T) -> ApiResult<U, E>>(self, op: F) -> ApiResult<U, E> {
         match self {
             ApiResult::Ok(t) => op(t),
@@ -111,7 +102,6 @@ impl<T: Serialize, E: ErrorData> ApiResult<T, E> {
         }
     }
 
-    #[allow(dead_code)]
     pub fn or<F: ErrorData>(self, res: ApiResult<T, F>) -> ApiResult<T, F> {
         match self {
             ApiResult::Ok(v) => ApiResult::Ok(v),
@@ -119,7 +109,6 @@ impl<T: Serialize, E: ErrorData> ApiResult<T, E> {
         }
     }
 
-    #[allow(dead_code)]
     pub fn or_else<F: ErrorData, O: FnOnce(ApiError<E>) -> ApiResult<T, F>>(
         self,
         op: O,
@@ -130,7 +119,6 @@ impl<T: Serialize, E: ErrorData> ApiResult<T, E> {
         }
     }
 
-    #[allow(dead_code)]
     pub fn unwrap_or(self, optb: T) -> T {
         match self {
             ApiResult::Ok(t) => t,
@@ -138,7 +126,6 @@ impl<T: Serialize, E: ErrorData> ApiResult<T, E> {
         }
     }
 
-    #[allow(dead_code)]
     pub fn unwrap_or_else<F: FnOnce(ApiError<E>) -> T>(self, op: F) -> T {
         match self {
             ApiResult::Ok(t) => t,
@@ -146,7 +133,6 @@ impl<T: Serialize, E: ErrorData> ApiResult<T, E> {
         }
     }
 
-    #[allow(dead_code)]
     pub fn into_result(self) -> Result<T, ApiError<E>> {
         match self {
             ApiResult::Ok(x) => Result::Ok(x),

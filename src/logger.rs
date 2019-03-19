@@ -6,6 +6,23 @@ use std::io;
 use std::io::prelude::*;
 use std::str::FromStr;
 
+/// Initialize logging
+///
+/// Precedence: LOG_LEVEL > RUST_LOG > 'verbosity' argument.
+///
+/// Env:
+///
+/// LOG_LEVEL: Used to control levels for modules. Overrides RUST_LOG
+/// This is useful to debug app only when executed through other tools
+/// like `cargo run`. Falls back to RUST_LOG if not provided.
+///
+/// LOG_LOCALTIME: Used to switch time format to local time. Use for dev
+///  
+/// Colors
+///
+/// Colors are automatic and will be disabled on pipes, or when TERM=dumb
+/// is passed along.
+///
 pub fn init(verbosity: usize) {
     use env_logger::*;
     use std::env;
@@ -22,7 +39,6 @@ pub fn init(verbosity: usize) {
     }
 
     // Use app specific LOG_LEVEL env that overrides RUST_LOG
-    // Useful to debug app only when executed through other tools like `cargo run`.
     let env_level = env::var(LOG_LEVEL_ENV);
     if env_level.is_ok() {
         env = env.filter(LOG_LEVEL_ENV);
@@ -73,6 +89,12 @@ fn get_formatter(
     }
 }
 
+/// Convert verbosity to filter levels
+/// Anything other invalid value returns Info, as that's usually the safest
+/// not over-burdening log systems, while still providing some verbosity.
+///
+/// Note: This is log verbosity, not log control, so doesn't support levels like
+/// Off. For that LOG_LEVEL can be used.
 fn level_filter_from_verbosity(verbosity: usize) -> LevelFilter {
     use log::LevelFilter::*;
     match verbosity {
@@ -80,6 +102,6 @@ fn level_filter_from_verbosity(verbosity: usize) -> LevelFilter {
         1 => Info,
         2 => Debug,
         3 => Trace,
-        _ => Trace,
+        _ => Info,
     }
 }
