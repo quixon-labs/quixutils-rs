@@ -1,5 +1,6 @@
 #![feature(uniform_paths)]
 #![feature(try_trait)]
+#![feature(trait_alias)]
 
 mod types;
 
