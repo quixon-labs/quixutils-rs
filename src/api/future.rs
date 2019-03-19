@@ -4,10 +4,15 @@ use futures::{Async, Future};
 use serde::Serialize;
 use std::ops::{Deref, DerefMut};
 
-pub trait ApiFuture<T: Serialize + 'static, D: ErrorData = ErrorItems> =
-    Future<Item = ApiResult<T, D>, Error = ApiError<D>>;
+// TODO: Switch to trait aliases after
+// bug with it are resolved: https://github.com/rust-lang/rust/issues/41517
+//
+// pub trait ApiFuture<T: Serialize + 'static, D: ErrorData = ErrorItems> =
+//     Future<Item = ApiResult<T, D>, Error = ApiError<D>>;
 
-pub struct ApiFutureBox<T: Serialize + 'static, D: ErrorData = ErrorItems>(Box<ApiFuture<T, D>>);
+pub struct ApiFutureBox<T: Serialize + 'static, D: ErrorData = ErrorItems>(
+    Box<Future<Item = ApiResult<T, D>, Error = ApiError<D>>>,
+);
 
 impl<T: Serialize, D: ErrorData> ApiFutureBox<T, D> {
     pub fn new<F: Future<Item = ApiResult<T, D>, Error = ApiError<D>> + 'static>(
@@ -30,11 +35,13 @@ impl<T: Serialize, D: ErrorData> ApiFutureBox<T, D> {
         ApiFutureBox::new(ok(r))
     }
 
-    pub fn from_boxed<F: ApiFuture<T, D> + 'static>(f: Box<F>) -> Self {
+    pub fn from_boxed<F: Future<Item = ApiResult<T, D>, Error = ApiError<D>> + 'static>(
+        f: Box<F>,
+    ) -> Self {
         ApiFutureBox(f)
     }
 
-    pub fn into_inner(self) -> Box<ApiFuture<T, D>> {
+    pub fn into_inner(self) -> Box<Future<Item = ApiResult<T, D>, Error = ApiError<D>>> {
         self.0
     }
 }
