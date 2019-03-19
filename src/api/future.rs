@@ -1,16 +1,16 @@
 use super::{ApiError, ApiResult, ErrorData, ErrorItems};
 use futures::future::ok;
-use futures::{Async, Future as StdFuture};
+use futures::{Async, Future};
 use serde::Serialize;
 use std::ops::{Deref, DerefMut};
 
 pub trait ApiFuture<T: Serialize + 'static, D: ErrorData = ErrorItems> =
-    StdFuture<Item = ApiResult<T, D>, Error = ApiError<D>>;
+    Future<Item = ApiResult<T, D>, Error = ApiError<D>>;
 
 pub struct ApiFutureBox<T: Serialize + 'static, D: ErrorData = ErrorItems>(Box<ApiFuture<T, D>>);
 
 impl<T: Serialize, D: ErrorData> ApiFutureBox<T, D> {
-    pub fn new<F: StdFuture<Item = ApiResult<T, D>, Error = ApiError<D>> + 'static>(
+    pub fn new<F: Future<Item = ApiResult<T, D>, Error = ApiError<D>> + 'static>(
         future: F,
     ) -> Self {
         ApiFutureBox(Box::new(future))
@@ -47,7 +47,7 @@ impl<T: Serialize, D: ErrorData> From<ApiResult<T, D>> for ApiFutureBox<T, D> {
 
 impl<T: Serialize, D: ErrorData, F> From<Box<F>> for ApiFutureBox<T, D>
 where
-    F: StdFuture<Item = ApiResult<T, D>, Error = ApiError<D>> + 'static,
+    F: Future<Item = ApiResult<T, D>, Error = ApiError<D>> + 'static,
 {
     fn from(f: Box<F>) -> Self {
         ApiFutureBox::from_boxed(f)
@@ -55,7 +55,7 @@ where
 }
 
 impl<T: Serialize + 'static, D: ErrorData> Deref for ApiFutureBox<T, D> {
-    type Target = StdFuture<Item = ApiResult<T, D>, Error = ApiError<D>>;
+    type Target = Future<Item = ApiResult<T, D>, Error = ApiError<D>>;
 
     fn deref(&self) -> &Self::Target {
         &self.0
@@ -68,7 +68,7 @@ impl<T: Serialize + 'static, D: ErrorData> DerefMut for ApiFutureBox<T, D> {
     }
 }
 
-impl<T: Serialize + 'static, D: ErrorData> StdFuture for ApiFutureBox<T, D> {
+impl<T: Serialize + 'static, D: ErrorData> Future for ApiFutureBox<T, D> {
     type Item = ApiResult<T, D>;
     type Error = ApiError<D>;
 

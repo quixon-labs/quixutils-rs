@@ -4,10 +4,10 @@ use futures::Future;
 use std::ops::{Deref, DerefMut};
 use std::result::Result;
 
-pub type ResultItem<T, E = Error> = Result<T, E>;
-pub trait FutureItem<T, E = Error> = Future<Item = T, Error = E>;
+pub type ResultAs<T, E = Error> = Result<T, E>;
+pub trait FutureAs<T, E = Error> = Future<Item = T, Error = E>;
 
-pub struct FutureBox<T: 'static, E: 'static = Error>(Box<FutureItem<T, E>>);
+pub struct FutureBox<T: 'static, E: 'static = Error>(Box<FutureAs<T, E>>);
 
 impl<T: 'static, E: 'static> Future for FutureBox<T, E> {
     type Item = T;
