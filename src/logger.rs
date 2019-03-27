@@ -23,7 +23,7 @@ use std::str::FromStr;
 /// Colors are automatic and will be disabled on pipes, or when TERM=dumb
 /// is passed along.
 ///
-pub fn init(verbosity: usize) {
+pub fn init(verbosity: Verbosity) {
     use env_logger::*;
     use std::env;
 
@@ -48,7 +48,7 @@ pub fn init(verbosity: usize) {
     let mut builder = Builder::from_env(env);
     if !has_opts {
         // Default log level
-        builder.filter_level(level_filter_from_verbosity(verbosity));
+        builder.filter_level(verbosity.log_level_filter());
     }
 
     let ts_local = match env::var(LOG_LOCALTIME_ENV) {
@@ -89,19 +89,52 @@ fn get_formatter(
     }
 }
 
-/// Convert verbosity to filter levels
-/// Anything other invalid value returns Info, as that's usually the safest
-/// not over-burdening log systems, while still providing some verbosity.
-///
-/// Note: This is log verbosity, not log control, so doesn't support levels like
-/// Off. For that LOG_LEVEL can be used.
-fn level_filter_from_verbosity(verbosity: usize) -> LevelFilter {
-    use log::LevelFilter::*;
-    match verbosity {
-        0 => Warn,
-        1 => Info,
-        2 => Debug,
-        3 => Trace,
-        _ => Info,
+#[derive(Copy, Clone, Debug)]
+#[repr(u8)]
+pub enum Verbosity {
+    Warn = 0,
+    Info,
+    Debug,
+    Trace,
+}
+
+impl Verbosity {
+    /// Convert u8 to verbosity
+    /// Anything other invalid value returns Info, as that's usually the safest
+    /// not over-burdening log systems, while still providing some verbosity.
+    ///
+    /// Note: This is log verbosity, not log control, so doesn't support levels like
+    /// Off. For that LOG_LEVEL can be used.
+    pub fn from_occurrence(val: u8) -> Verbosity {
+        use Verbosity::*;
+        match val {
+            0 => Warn,
+            1 => Info,
+            2 => Debug,
+            3 => Trace,
+            _ => Info,
+        }
+    }
+
+    pub fn from_signed_occurrence(val: i8) -> Verbosity {
+        let v = if val < 0 { 0u8 } else { val as u8 };
+        Verbosity::from_occurrence(v)
+    }
+
+    fn log_level_filter(self) -> LevelFilter {
+        use log::LevelFilter::*;
+        match self as u8 {
+            0 => Warn,
+            1 => Info,
+            2 => Debug,
+            3 => Trace,
+            _ => Info,
+        }
+    }
+}
+
+impl From<u8> for Verbosity {
+    fn from(val: u8) -> Verbosity {
+        Verbosity::from_occurrence(val)
     }
 }
