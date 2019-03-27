@@ -11,8 +11,8 @@ pub type ResultAs<T, E = Error> = Result<T, E>;
 //
 // pub trait FutureAs<T, E = Error> = Future<Item = T, Error = E>;
 
-// CAUTION: This doesn't do `Send` automatically. So, Boxed futures with Send 
-// have to be done explicitly. Let's evaluate if we need another type for it 
+// CAUTION: This doesn't do `Send` automatically. So, Boxed futures with Send
+// have to be done explicitly. Let's evaluate if we need another type for it
 // based on use cases.
 pub struct FutureBox<T: 'static, E: 'static = Error>(Box<Future<Item = T, Error = E>>);
 

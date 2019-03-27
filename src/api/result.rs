@@ -21,7 +21,7 @@ impl<T: Serialize, E: ErrorData> Try for ApiResult<T, E> {
     type Ok = T;
     type Error = ApiError<E>;
 
-    fn into_result(self) -> Result<Self::Ok, Self::Error> {
+    fn into_result(self) -> Result<<Self as Try>::Ok, Self::Error> {
         match self {
             ApiResult::Ok(v) => Ok(v),
             ApiResult::Err(e) => Err(e),
@@ -32,7 +32,7 @@ impl<T: Serialize, E: ErrorData> Try for ApiResult<T, E> {
         ApiResult::Err(v)
     }
 
-    fn from_ok(v: Self::Ok) -> Self {
+    fn from_ok(v: <Self as Try>::Ok) -> Self {
         ApiResult::Ok(v)
     }
 }

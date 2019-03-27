@@ -10,8 +10,8 @@ use std::ops::{Deref, DerefMut};
 // pub trait ApiFuture<T: Serialize + 'static, D: ErrorData = ErrorItems> =
 //     Future<Item = ApiResult<T, D>, Error = ApiError<D>>;
 
-// CAUTION: This doesn't do `Send` automatically. So, Boxed futures with Send 
-// have to be done explicitly. Let's evaluate if we need another type for it 
+// CAUTION: This doesn't do `Send` automatically. So, Boxed futures with Send
+// have to be done explicitly. Let's evaluate if we need another type for it
 // based on use cases.
 pub struct ApiFutureBox<T: Serialize + 'static, D: ErrorData = ErrorItems>(
     Box<Future<Item = ApiResult<T, D>, Error = ApiError<D>>>,

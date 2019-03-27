@@ -23,7 +23,11 @@ use std::str::FromStr;
 /// Colors are automatic and will be disabled on pipes, or when TERM=dumb
 /// is passed along.
 ///
-pub fn init(verbosity: Verbosity) {
+pub fn init() {
+    init_with_verbosity(Verbosity::Info as u8);
+}
+
+pub fn init_with_verbosity(verbosity_level: u8) {
     use env_logger::*;
     use std::env;
 
@@ -47,8 +51,8 @@ pub fn init(verbosity: Verbosity) {
 
     let mut builder = Builder::from_env(env);
     if !has_opts {
-        // Default log level
-        builder.filter_level(verbosity.log_level_filter());
+        // set default log level
+        builder.filter_level(Verbosity::from_occurrence(verbosity_level).log_level_filter());
     }
 
     let ts_local = match env::var(LOG_LOCALTIME_ENV) {
