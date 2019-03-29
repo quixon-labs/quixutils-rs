@@ -46,8 +46,8 @@ publish:
 
 
 define cargo =
-set -e;
-cargo_args="$(CARGO_ARGS)";
-if [[ "$(DEBUG)" != "1" ]]; then cargo_args="--release $(CARGO_ARGS)"; fi;
+set -e
+cargo_args="$(CARGO_ARGS)"
+if [[ "$(DEBUG)" != "1" ]]; then cargo_args="--release $(CARGO_ARGS)"; fi
 cargo +$(CARGO_TOOLCHAIN) $(1) $${cargo_args}
 endef
