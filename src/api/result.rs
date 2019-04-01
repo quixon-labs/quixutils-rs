@@ -151,33 +151,22 @@ impl ErrorData for ErrorItems {}
 
 #[derive(Debug, Serialize, Fail)]
 pub enum ApiError<D: ErrorData = ()> {
-    #[allow(dead_code)]
     UserError(D),
-    #[allow(dead_code)]
     BadRequest(#[serde(skip_serializing_if = "Option::is_none")] Option<D>),
-    #[allow(dead_code)]
     UnprocessableEntity(#[serde(skip_serializing_if = "Option::is_none")] Option<D>),
-    #[allow(dead_code)]
     TooManyRequests {
         #[serde(skip_serializing_if = "Option::is_none")]
         retry_after_secs: Option<i32>,
     },
-    #[allow(dead_code)]
     Unauthorized,
-    #[allow(dead_code)]
     Forbidden,
-    #[allow(dead_code)]
     NotFound,
-    #[allow(dead_code)]
     BadGateway,
-    #[allow(dead_code)]
     GatewayTimeout,
-    #[allow(dead_code)]
     Internal {
         #[serde(skip)]
         error: Error,
     },
-    #[allow(dead_code)]
     Unknown,
 }
 
