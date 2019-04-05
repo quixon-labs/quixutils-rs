@@ -13,6 +13,8 @@ use std::ops::{Deref, DerefMut};
 // CAUTION: This doesn't do `Send` automatically. So, Boxed futures with Send
 // have to be done explicitly. Let's evaluate if we need another type for it
 // based on use cases.
+
+/// NOTE: This has to be rethought after `FutureObj` in the futures.
 pub struct ApiFutureBox<T: Serialize + 'static, D: ErrorData = ErrorItems>(
     Box<Future<Item = ApiResult<T, D>, Error = ApiError<D>>>,
 );

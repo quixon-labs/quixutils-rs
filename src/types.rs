@@ -4,6 +4,10 @@ use futures::Future;
 use std::ops::{Deref, DerefMut};
 use std::result::Result;
 
+/// Convenience alias for result.
+/// NOTE: Let's not use this anymore - Result is just
+/// explicit and easier to reason with despite the
+/// longer name.
 pub type ResultAs<T, E = Error> = Result<T, E>;
 
 // TODO: Switch to trait aliases after
@@ -14,6 +18,9 @@ pub type ResultAs<T, E = Error> = Result<T, E>;
 // CAUTION: This doesn't do `Send` automatically. So, Boxed futures with Send
 // have to be done explicitly. Let's evaluate if we need another type for it
 // based on use cases.
+
+/// Convenience alias for boxed future. 
+/// NOTE: This should no longer be needed with `FutureObj`.
 pub struct FutureBox<T: 'static, E: 'static = Error>(Box<Future<Item = T, Error = E>>);
 
 impl<T: 'static, E: 'static> Future for FutureBox<T, E> {

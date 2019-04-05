@@ -6,6 +6,12 @@ use std::ops::Try;
 
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
+/// ApiResult: Wrapper with convenience helpers for services
+/// across different protocols.
+/// 
+/// NOTE: Experiment more to figure out if it's really needed
+/// or is it a better pattern to just work with ApiError and
+/// Result itself instead.
 pub enum ApiResult<T: Serialize, E: ErrorData = ErrorItems> {
     Ok(T),
     Err(ApiError<E>),
