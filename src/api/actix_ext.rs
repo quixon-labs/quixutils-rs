@@ -1,33 +1,7 @@
-use super::{ApiError, ApiResult, ErrorData};
+use super::{ApiError, ErrorData};
 use actix_web::error::Error as ActixError;
 use actix_web::http::StatusCode;
-use actix_web::{HttpRequest, HttpResponse, Responder, ResponseError};
-use serde::Serialize;
-
-// Responder impl
-
-impl<T, E> Responder for ApiResult<T, E>
-where
-    T: Serialize,
-    E: ErrorData,
-{
-    type Item = HttpResponse;
-    type Error = ApiError<E>;
-
-    fn respond_to<S: 'static>(
-        self,
-        _req: &HttpRequest<S>,
-    ) -> std::result::Result<Self::Item, Self::Error> {
-        let res = match self {
-            ApiResult::Ok(v) => {
-                let payload: ApiResult<T, E> = ApiResult::Ok(v);
-                Ok(HttpResponse::Ok().json(payload))
-            }
-            ApiResult::Err(e) => Err(e),
-        };
-        res
-    }
-}
+use actix_web::{HttpResponse, ResponseError};
 
 // Errors impl
 

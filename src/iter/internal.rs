@@ -5,7 +5,10 @@ pub(crate) struct SliceIterIndexed<'a, T> {
 
 impl<'a, T> SliceIterIndexed<'a, T> {
     pub(crate) fn new(elem: &'a [T]) -> SliceIterIndexed<'a, T> {
-        SliceIterIndexed { elem, curr_index: 0 }
+        SliceIterIndexed {
+            elem,
+            curr_index: 0,
+        }
     }
 }
 
