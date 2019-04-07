@@ -1,6 +1,6 @@
 [package]
 name = "quixutils"
-version = "0.8.0"
+version = "0.8.1"
 authors = ["Prasanna Loganathar <pvl@prasannavl.com>"]
 edition = "2018"
 description = "Common helpers and utils"
