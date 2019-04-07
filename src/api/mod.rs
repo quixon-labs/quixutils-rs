@@ -1,6 +1,6 @@
-mod result;
+mod error;
 
-pub use result::*;
+pub use error::*;
 
 #[cfg(feature = "actix_utils")]
 pub mod actix_ext;

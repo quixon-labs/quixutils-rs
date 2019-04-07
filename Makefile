@@ -35,7 +35,7 @@ run:
 
 .PHONY: check
 check: 
-	@$(call cargo,check)
+	@$(call cargo,check --all-features)
 
 .PHONY: publish
 publish:
