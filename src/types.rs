@@ -1,5 +1,5 @@
 use failure::Error;
-use std::result::{Result as StdResult};
+use std::result::Result as StdResult;
 
 /// Convenience alias for result with `failure::Error`
 /// as default when E isn't provided. Fully compatible

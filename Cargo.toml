@@ -28,6 +28,8 @@ env_logger = "0.6"
 tide = { version = "0.0.5", optional = true }
 http = "0.1.17"
 http-service = "0.1.4"
+tokio-async-await = { version = "0.1.6", features=["async-await-preview"] }
+tokio = "0.1.18"
 
 [features]
 
