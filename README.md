@@ -4,6 +4,7 @@ Common helpers and utils
 
 ### Current features
 
+- Drop in replacement alias type for `Result<T, E>` => `Result<T, E=failure::Error>`
 - Logging initializers
 - Common iterators
 - ApiError

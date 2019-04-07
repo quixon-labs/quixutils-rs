@@ -1,10 +1,8 @@
 use failure::Error;
-use std::result::Result;
+use std::result::{Result as StdResult};
 
 /// Convenience alias for result with `failure::Error`
-/// as default when E isn't provided.
-///
-/// NOTE: Based on experience, let's not use this anymore
-/// Result is just explicit and easier to reason with despite
-/// more key strokes.
-pub type ResultAs<T, E = Error> = Result<T, E>;
+/// as default when E isn't provided. Fully compatible
+/// with std Result when E is provided, and is a drop-in
+/// replacement.
+pub type Result<T, E = Error> = StdResult<T, E>;
