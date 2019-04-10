@@ -1,9 +1,9 @@
 mod internal;
 
-use internal::*;
+use self::internal::*;
 
 /// Like split, but includes the delimiter
-pub fn split_with_delimtier(s: &str, c: char) -> impl Iterator<Item = &str> {
+pub fn split_with_delimiter(s: &str, c: char) -> impl Iterator<Item = &str> {
     let n = c.len_utf8();
     let mut end = 0;
     s.match_indices(c).map(move |(i, _)| {

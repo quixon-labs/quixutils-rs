@@ -1,29 +1,32 @@
-use super::{ApiError, ErrorData};
 use actix_web::error::Error as ActixError;
 use actix_web::http::StatusCode;
 use actix_web::{HttpResponse, ResponseError};
+
+use super::{ApiError, ErrorData};
+use serde::Serialize;
 
 // Errors impl
 
 impl<D: ErrorData> ResponseError for ApiError<D> {
     fn error_response(&self) -> HttpResponse {
+        use self::ApiError::*;
         match self {
-            ApiError::UserError(d) => HttpResponse::Ok().json(d),
-            ApiError::BadRequest(o) => {
+            UserError(d) => HttpResponse::Ok().json(d),
+            BadRequest(o) => {
                 if let Some(d) = o {
-                    HttpResponse::build(StatusCode::BAD_REQUEST).json(d)
+                    json(StatusCode::BAD_REQUEST, d)
                 } else {
-                    HttpResponse::new(StatusCode::BAD_REQUEST)
+                    empty(StatusCode::BAD_REQUEST)
                 }
             }
-            ApiError::UnprocessableEntity(o) => {
+            UnprocessableEntity(o) => {
                 if let Some(d) = o {
-                    HttpResponse::build(StatusCode::UNPROCESSABLE_ENTITY).json(d)
+                    json(StatusCode::UNPROCESSABLE_ENTITY, d)
                 } else {
-                    HttpResponse::new(StatusCode::UNPROCESSABLE_ENTITY)
+                    empty(StatusCode::UNPROCESSABLE_ENTITY)
                 }
             }
-            ApiError::TooManyRequests {
+            TooManyRequests {
                 retry_after_secs: r,
             } => {
                 if let Some(t) = r {
@@ -31,21 +34,29 @@ impl<D: ErrorData> ResponseError for ApiError<D> {
                         .header("Retry-After", t.to_string())
                         .finish()
                 } else {
-                    HttpResponse::new(StatusCode::TOO_MANY_REQUESTS)
+                    empty(StatusCode::TOO_MANY_REQUESTS)
                 }
             }
-            ApiError::Unauthorized => HttpResponse::new(StatusCode::UNAUTHORIZED),
-            ApiError::Forbidden => HttpResponse::new(StatusCode::FORBIDDEN),
-            ApiError::NotFound => HttpResponse::new(StatusCode::NOT_FOUND),
-            ApiError::BadGateway => HttpResponse::new(StatusCode::BAD_GATEWAY),
-            ApiError::GatewayTimeout => HttpResponse::new(StatusCode::GATEWAY_TIMEOUT),
-            ApiError::Internal { error: e } => {
+            Unauthorized => empty(StatusCode::UNAUTHORIZED),
+            Forbidden => empty(StatusCode::FORBIDDEN),
+            NotFound => empty(StatusCode::NOT_FOUND),
+            BadGateway => empty(StatusCode::BAD_GATEWAY),
+            GatewayTimeout => empty(StatusCode::GATEWAY_TIMEOUT),
+            Internal { error: e } => {
                 log::error!("{:?}", e);
-                HttpResponse::new(StatusCode::INTERNAL_SERVER_ERROR)
+                empty(StatusCode::INTERNAL_SERVER_ERROR)
             }
-            ApiError::Unknown => HttpResponse::new(StatusCode::INTERNAL_SERVER_ERROR),
+            Unknown => empty(StatusCode::INTERNAL_SERVER_ERROR),
         }
     }
+}
+
+fn empty(code: StatusCode) -> HttpResponse {
+    HttpResponse::new(code)
+}
+
+fn json<T: Serialize>(code: StatusCode, body: T) -> HttpResponse {
+    HttpResponse::build(code).json(body)
 }
 
 // From errors

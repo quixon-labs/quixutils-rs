@@ -40,23 +40,24 @@ impl<D: ErrorData> From<Error> for ApiError<D> {
 
 impl<D: ErrorData> Display for ApiError<D> {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        use self::ApiError::*;
         match self {
-            ApiError::UserError(d) => writeln!(f, "user error: {:?}", d),
-            ApiError::BadRequest(o) => {
+            UserError(d) => writeln!(f, "user error: {:?}", d),
+            BadRequest(o) => {
                 if let Some(d) = o {
                     writeln!(f, "error: bad request: {:?}", d)
                 } else {
                     writeln!(f, "error: bad request")
                 }
             }
-            ApiError::UnprocessableEntity(o) => {
+            UnprocessableEntity(o) => {
                 if let Some(d) = o {
                     writeln!(f, "error: unprocessable entity: {:?}", d)
                 } else {
                     writeln!(f, "error: unprocessable entity")
                 }
             }
-            ApiError::TooManyRequests {
+            TooManyRequests {
                 retry_after_secs: r,
             } => {
                 if let Some(t) = r {
@@ -65,13 +66,13 @@ impl<D: ErrorData> Display for ApiError<D> {
                     writeln!(f, "error: too many requests")
                 }
             }
-            ApiError::Unauthorized => writeln!(f, "error: unauthorized"),
-            ApiError::Forbidden => writeln!(f, "error: forbidden"),
-            ApiError::NotFound => writeln!(f, "error: not found"),
-            ApiError::BadGateway => writeln!(f, "error: bad gateway"),
-            ApiError::GatewayTimeout => writeln!(f, "error: gateway timeout"),
-            ApiError::Internal { error: e } => writeln!(f, "error: {:?}", e),
-            ApiError::Unknown => writeln!(f, "unknown error"),
+            Unauthorized => writeln!(f, "error: unauthorized"),
+            Forbidden => writeln!(f, "error: forbidden"),
+            NotFound => writeln!(f, "error: not found"),
+            BadGateway => writeln!(f, "error: bad gateway"),
+            GatewayTimeout => writeln!(f, "error: gateway timeout"),
+            Internal { error: e } => writeln!(f, "error: {:?}", e),
+            Unknown => writeln!(f, "unknown error"),
         }
     }
 }

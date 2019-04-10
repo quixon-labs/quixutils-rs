@@ -7,23 +7,24 @@ use super::{ApiError, ErrorData};
 
 impl<T: ErrorData> IntoResponse for ApiError<T> {
     fn into_response(self) -> Response {
+        use self::ApiError::*;
         match self {
-            ApiError::UserError(d) => json(StatusCode::OK, d),
-            ApiError::BadRequest(o) => {
+            UserError(d) => json(StatusCode::OK, d),
+            BadRequest(o) => {
                 if let Some(d) = o {
                     json(StatusCode::BAD_REQUEST, d)
                 } else {
                     empty(StatusCode::BAD_REQUEST)
                 }
             }
-            ApiError::UnprocessableEntity(o) => {
+            UnprocessableEntity(o) => {
                 if let Some(d) = o {
                     json(StatusCode::UNPROCESSABLE_ENTITY, d)
                 } else {
                     empty(StatusCode::UNPROCESSABLE_ENTITY)
                 }
             }
-            ApiError::TooManyRequests {
+            TooManyRequests {
                 retry_after_secs: r,
             } => {
                 if let Some(t) = r {
@@ -36,16 +37,16 @@ impl<T: ErrorData> IntoResponse for ApiError<T> {
                     empty(StatusCode::TOO_MANY_REQUESTS)
                 }
             }
-            ApiError::Unauthorized => empty(StatusCode::UNAUTHORIZED),
-            ApiError::Forbidden => empty(StatusCode::FORBIDDEN),
-            ApiError::NotFound => empty(StatusCode::NOT_FOUND),
-            ApiError::BadGateway => empty(StatusCode::BAD_GATEWAY),
-            ApiError::GatewayTimeout => empty(StatusCode::GATEWAY_TIMEOUT),
-            ApiError::Internal { error: e } => {
+            Unauthorized => empty(StatusCode::UNAUTHORIZED),
+            Forbidden => empty(StatusCode::FORBIDDEN),
+            NotFound => empty(StatusCode::NOT_FOUND),
+            BadGateway => empty(StatusCode::BAD_GATEWAY),
+            GatewayTimeout => empty(StatusCode::GATEWAY_TIMEOUT),
+            Internal { error: e } => {
                 log::error!("{:?}", e);
                 empty(StatusCode::INTERNAL_SERVER_ERROR)
             }
-            ApiError::Unknown => empty(StatusCode::INTERNAL_SERVER_ERROR),
+            Unknown => empty(StatusCode::INTERNAL_SERVER_ERROR),
         }
     }
 }

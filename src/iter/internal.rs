@@ -4,7 +4,7 @@ pub(crate) struct SliceIterIndexed<'a, T> {
 }
 
 impl<'a, T> SliceIterIndexed<'a, T> {
-    pub(crate) fn new(elem: &'a [T]) -> SliceIterIndexed<'a, T> {
+    pub fn new(elem: &'a [T]) -> SliceIterIndexed<'a, T> {
         SliceIterIndexed {
             elem,
             curr_index: 0,
@@ -12,8 +12,8 @@ impl<'a, T> SliceIterIndexed<'a, T> {
     }
 }
 
-pub(crate) struct HeadsIter<'a, T>(pub(crate) SliceIterIndexed<'a, T>);
-pub(crate) struct TailsIter<'a, T>(pub(crate) SliceIterIndexed<'a, T>);
+pub struct HeadsIter<'a, T>(pub(crate) SliceIterIndexed<'a, T>);
+pub struct TailsIter<'a, T>(pub(crate) SliceIterIndexed<'a, T>);
 
 impl<'a, T> Iterator for TailsIter<'a, T> {
     type Item = &'a [T];

@@ -1,3 +1,3 @@
 mod future_utils;
 
-pub use future_utils::*;
+pub use self::future_utils::*;

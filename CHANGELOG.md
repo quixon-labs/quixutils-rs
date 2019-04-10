@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - None
 
+## [0.9.1] - 2019-11-04
+
+### Changed
+
+- Fix typo for `split_with_delimiter`
+
 ## [0.9.0] - 2019-11-04
 
 ### Changed

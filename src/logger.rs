@@ -110,7 +110,7 @@ impl Verbosity {
     /// Note: This is log verbosity, not log control, so doesn't support levels like
     /// Off. For that LOG_LEVEL can be used.
     pub fn from_occurrence(val: u8) -> Verbosity {
-        use Verbosity::*;
+        use self::Verbosity::*;
         match val {
             0 => Warn,
             1 => Info,
