@@ -16,7 +16,7 @@ use std::str::FromStr;
 /// This is useful to debug app only when executed through other tools
 /// like `cargo run`. Falls back to RUST_LOG if not provided.
 ///
-/// LOG_LOCALTIME: Used to switch time format to local time. Use for dev
+/// LOG_UTC: 1 for UTC, 0 for local. UTC by default
 ///  
 /// Colors
 ///
@@ -32,7 +32,7 @@ pub fn init_with_verbosity(verbosity_level: u8) {
     use std::env;
 
     const LOG_LEVEL_ENV: &str = "LOG_LEVEL";
-    const LOG_LOCALTIME_ENV: &str = "LOG_LOCALTIME";
+    const LOG_UTC_ENV: &str = "LOG_UTC";
 
     let mut env = Env::new();
     let mut has_opts = false;
@@ -55,17 +55,17 @@ pub fn init_with_verbosity(verbosity_level: u8) {
         builder.filter_level(Verbosity::from_occurrence(verbosity_level).log_level_filter());
     }
 
-    let ts_local = match env::var(LOG_LOCALTIME_ENV) {
-        Ok(v) => i32::from_str(&v).unwrap_or_default() > 0,
+    let ts_utc = match env::var(LOG_UTC_ENV) {
+        Ok(v) => i32::from_str(&v).unwrap_or(1) > 0,
         Err(_) => false,
     };
 
-    builder.format(get_formatter(ts_local));
+    builder.format(get_formatter(ts_utc));
     builder.init();
 }
 
 fn get_formatter(
-    ts_local: bool,
+    ts_utc: bool,
 ) -> impl Fn(&mut Formatter, &Record) -> io::Result<()> + Sync + Send + 'static {
     move |buf: &mut Formatter, record: &Record| {
         use env_logger::fmt::Color;
@@ -77,10 +77,10 @@ fn get_formatter(
         let mut path_style = buf.style();
         let path_style = path_style.set_color(Color::Cyan);
 
-        let ts = if ts_local {
-            Local::now().to_rfc3339_opts(SecondsFormat::Millis, false)
-        } else {
+        let ts = if ts_utc {
             Utc::now().to_rfc3339_opts(SecondsFormat::Millis, true)
+        } else {
+            Local::now().to_rfc3339_opts(SecondsFormat::Millis, false)
         };
         writeln!(
             buf,
