@@ -8,7 +8,7 @@ Common helpers and utils
 - Logging initializers
 - Common iterators
 - ApiError
-- Future based sleep helpers
+- Future based timer helpers
 - actix & actix web utils
 - tide utils
 

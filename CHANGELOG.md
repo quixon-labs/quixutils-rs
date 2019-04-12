@@ -8,6 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - None
 
+## [0.10.0] - 2019-13-04
+
+### Added
+
+- `quixutils::timer` mod
+
+### Changed
+
+- `sleep` => `delay` to be more in line with std
+- Similarly, `sleep_ms` => `delay_ms`
+- `delay` function have now been moved into `timer` mod
+
+
 ## [0.9.1] - 2019-11-04
 
 ### Changed
