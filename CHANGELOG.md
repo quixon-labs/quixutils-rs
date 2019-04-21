@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - None
 
-## [0.10.0] - 2019-13-04
+## [0.10.0] - 2019-04-13
 
 ### Added
 
@@ -21,13 +21,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `delay` function have now been moved into `timer` mod
 
 
-## [0.9.1] - 2019-11-04
+## [0.9.1] - 2019-04-11
 
 ### Changed
 
 - Fix typo for `split_with_delimiter`
 
-## [0.9.0] - 2019-11-04
+## [0.9.0] - 2019-04-11
 
 ### Changed
 
