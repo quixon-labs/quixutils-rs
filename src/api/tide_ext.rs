@@ -1,7 +1,7 @@
 use http::Response as HttpResponse;
 use http::StatusCode;
 use http_service::Body;
-use tide::{body::Json, IntoResponse, Response};
+use tide::{Response, response::IntoResponse};
 
 use super::{ApiError, ErrorData};
 
@@ -59,7 +59,7 @@ fn empty(code: StatusCode) -> Response {
 }
 
 fn json<T: Send + serde::Serialize>(code: StatusCode, body: T) -> Response {
-    let mut response = Json(body).into_response();
+    let mut response = tide::response::json(body);
     *response.status_mut() = code;
     response
 }

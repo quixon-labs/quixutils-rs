@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - None
 
+## [0.11.0] - 2019-22-04
+
+### Changed
+
+- Switch to `futures 0.3`
+- Bring tide utils in sync with upstream tide - `0.1.1`
+- Bring actix utils in sync with upstream actix - `1.0-beta`
+- Switch to `futures::compat` instead of tokio async await preview.
+
 ## [0.10.0] - 2019-04-13
 
 ### Added
