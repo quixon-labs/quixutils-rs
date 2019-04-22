@@ -38,6 +38,12 @@ impl<D: ErrorData> From<Error> for ApiError<D> {
     }
 }
 
+impl<D: ErrorData> From<std::io::Error> for ApiError<D> {
+    fn from(error: std::io::Error) -> Self {
+        ApiError::Internal { error: failure::Error::from(error) }
+    }
+}
+
 impl<D: ErrorData> Display for ApiError<D> {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         use self::ApiError::*;
