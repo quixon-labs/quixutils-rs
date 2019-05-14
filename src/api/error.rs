@@ -47,7 +47,7 @@ impl<D: ErrorData> From<std::io::Error> for ApiError<D> {
 }
 
 impl<D: ErrorData> Display for ApiError<D> {
-    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         use self::ApiError::*;
         match self {
             UserError(d) => writeln!(f, "user error: {:?}", d),

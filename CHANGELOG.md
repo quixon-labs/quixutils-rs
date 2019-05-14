@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - None
 
+## [0.12.0] - 2019-05-14
+
+- Updated deps to latest
+- Fix compilation on latest nightly and futures_api
+
 ## [0.11.0] - 2019-04-22
 
 ### Changed
@@ -28,7 +33,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `sleep` => `delay` to be more in line with std
 - Similarly, `sleep_ms` => `delay_ms`
 - `delay` function have now been moved into `timer` mod
-
 
 ## [0.9.1] - 2019-04-11
 

@@ -66,8 +66,8 @@ pub fn init_with_verbosity(verbosity_level: u8) {
 
 fn get_formatter(
     ts_utc: bool,
-) -> impl Fn(&mut Formatter, &Record) -> io::Result<()> + Sync + Send + 'static {
-    move |buf: &mut Formatter, record: &Record| {
+) -> impl Fn(&mut Formatter, &Record<'_>) -> io::Result<()> + Sync + Send + 'static {
+    move |buf: &mut Formatter, record: &Record<'_>| {
         use env_logger::fmt::Color;
 
         let l = record.level();
