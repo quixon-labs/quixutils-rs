@@ -4,15 +4,17 @@ Common helpers and utils
 
 ### Current features
 
-- Drop in replacement alias type for `Result<T, E>` => `Result<T, E=failure::Error>`
+- Drop in replacement alias type for `Result<T, E>` => `Result<T, E=anyhow::Error>`
 - Logging initializers
 - Common iterators
-- ApiError
 - Future based timer helpers
+
+## Deprecated in 0.2x
+
+- ApiError
 - actix & actix web utils
 - tide utils
 
 ### Cargo features
 
-- __actix_utils__: Actix and actix-web utils
-- __tide_utils__: Tide utils
+- __tokio_utils__: Futures and tokio utils

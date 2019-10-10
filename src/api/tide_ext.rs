@@ -1,7 +1,6 @@
 use http::Response as HttpResponse;
 use http::StatusCode;
-use http_service::Body;
-use tide::{response::IntoResponse, Response};
+use tide::{response::{IntoResponse, Body}, Response};
 
 use super::{ApiError, ErrorData};
 

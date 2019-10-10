@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - None
 
+## [0.12.0] - 2019-10-11
+
+- Removed `api` for now.
+- Removed actix and tide support for now.
+- Moved away from `failure` to `anyhow`
+- Removed features: `actix_utils` and `tide_utils`
+- Added feature `tokio_utils`
+
 ## [0.11.2] - 2019-05-14
 
 - Updated deps to latest
