@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - None
 
-## [0.12.1] - 2019-10-11
+## [0.12.2] - 2019-10-11
 
 - Add `error` mod
 
