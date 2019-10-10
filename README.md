@@ -6,6 +6,7 @@ Common helpers and utils
 
 - Drop in replacement alias type for `Result<T, E>` => `Result<T, E=anyhow::Error>`
 - Logging initializers
+- Error helpers
 - Common iterators
 - Future based timer helpers
 
