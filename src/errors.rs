@@ -25,10 +25,7 @@ pub fn print_error_chain_with_prefix(
 }
 
 #[allow(unused_variables)]
-pub fn print_error(
-    e: &dyn std::error::Error,
-    err_prefix: Option<&str>,
-) {
+pub fn print_error(e: &dyn std::error::Error, err_prefix: Option<&str>) {
     let err_prefix = err_prefix.unwrap_or("Error: ");
     eprintln!("{}{}", err_prefix, e);
 
