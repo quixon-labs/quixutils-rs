@@ -1,6 +1,6 @@
-
-pub fn print_on_error<T, E>(result: Result<T, E>) 
-    where E: std::error::Error 
+pub fn print_on_error<T, E>(result: Result<T, E>)
+where
+    E: std::error::Error,
 {
     if let Err(err) = result {
         print_error_chain(&err);
@@ -16,12 +16,15 @@ fn print_error_chain(e: &dyn std::error::Error) {
     }
 }
 
-fn print_error(e: &dyn std::error::Error, err_prefix: Option<&str>, 
-    #[allow(unused_variables)] backtrace_prefix: Option<&str>) {
-
+#[allow(unused_variables)]
+fn print_error(
+    e: &dyn std::error::Error,
+    err_prefix: Option<&str>,
+    backtrace_prefix: Option<&str>,
+) {
     let err_prefix = err_prefix.unwrap_or("Error: ");
     eprintln!("{}{}", err_prefix, e);
-        
+
     #[cfg(feature = "backtrace")]
     {
         let bt_prefix = backtrace_prefix.unwrap_or("Backtrace:\n");
