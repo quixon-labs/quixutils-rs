@@ -1,4 +1,5 @@
-#![cfg_attr(nightly, feature(backtrace))]
+#![cfg_attr(feature = "unstable", feature(backtrace))]
+
 #![deny(
     nonstandard_style,
     rust_2018_idioms,

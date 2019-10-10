@@ -34,7 +34,7 @@ pub fn print_error(
     let err_prefix = err_prefix.unwrap_or("Error: ");
     eprintln!("{}{}", err_prefix, e);
 
-    #[cfg(nightly)]
+    #[cfg(feature = "unstable")]
     {
         let bt_prefix = backtrace_prefix.unwrap_or("Backtrace:\n");
         if let Some(b) = e.backtrace() {

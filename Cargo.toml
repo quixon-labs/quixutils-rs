@@ -1,6 +1,6 @@
 [package]
 name = "quixutils"
-version = "0.12.3"
+version = "0.12.4"
 authors = ["Prasanna Loganathar <pvl@prasannavl.com>"]
 edition = "2018"
 description = "Common helpers and utils"
@@ -33,6 +33,7 @@ anyhow = "1.0.11"
 [features]
 
 default = []
+unstable = []
 # If same name as dependencies can be used, change this.
 # https://github.com/rust-lang/cargo/issues/4911
 # actix_utils = ["actix", "actix-web"]
