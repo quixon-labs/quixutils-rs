@@ -25,7 +25,12 @@ pub fn eprint_error_chain(e: &dyn std::error::Error) {
 pub fn log_error_chain(e: &dyn std::error::Error) {
     let mut err_bytes = Vec::with_capacity(16);
     write_error_chain_checked!(e, &mut err_bytes);
-    log::error!("{}", String::from_utf8_lossy(&err_bytes));
+    let log_message = if err_bytes.ends_with(&['\n' as u8]) {
+        &err_bytes[0..(err_bytes.len() - 1)]
+    } else {
+        &err_bytes[..]
+    };
+    log::error!("{}", String::from_utf8_lossy(log_message));
 }
 
 pub fn write_error_chain<W: std::io::Write>(e: &dyn std::error::Error, to: &mut W) -> Result<()> {
