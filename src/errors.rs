@@ -8,31 +8,46 @@ where
 }
 
 pub fn print_error_chain(e: &dyn std::error::Error) {
-    print_error_chain_with_prefix(e, None, Some("Caused By: "));
+    let mut out = std::io::stderr();
+    write_error_chain(e, &mut out);
 }
 
-pub fn print_error_chain_with_prefix(
+pub fn log_error_chain(e: &dyn std::error::Error) {
+    let mut err_bytes = Vec::with_capacity(16);
+    write_error_chain(e, &mut err_bytes);
+    log::error!("{}", String::from_utf8_lossy(&err_bytes));
+}
+
+pub fn write_error_chain<W: std::io::Write>(e: &dyn std::error::Error, to: &mut W) {
+    write_error_chain_with_opts(e, None, Some("Caused By: "), to);
+}
+
+pub fn write_error_chain_with_opts<W: std::io::Write>(
     e: &dyn std::error::Error,
     err_prefix: Option<&str>,
     err_cause_prefix: Option<&str>,
+    to: &mut W,
 ) {
-    print_error(e, err_prefix);
+    write_error(e, err_prefix, to);
     let mut cause = e.source();
     while let Some(e) = cause {
-        print_error(e, err_cause_prefix);
+        write_error(e, err_cause_prefix, to);
         cause = e.source();
     }
 }
 
-#[allow(unused_variables)]
-pub fn print_error(e: &dyn std::error::Error, err_prefix: Option<&str>) {
+pub fn write_error<W: std::io::Write>(
+    e: &dyn std::error::Error,
+    err_prefix: Option<&str>,
+    to: &mut W,
+) {
     let err_prefix = err_prefix.unwrap_or("Error: ");
-    eprintln!("{}{}", err_prefix, e);
+    writeln!(to, "{}{}", err_prefix, e);
 
     #[cfg(feature = "unstable")]
     {
         if let Some(b) = e.backtrace() {
-            eprintln!("{}", b);
+            writeln!(to, "{}", b);
         }
     }
 }
