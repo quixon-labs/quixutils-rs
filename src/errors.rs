@@ -17,6 +17,15 @@ where
     }
 }
 
+pub fn log_on_error<T, E>(result: std::result::Result<T, E>)
+where
+    E: std::error::Error,
+{
+    if let Err(err) = result {
+        log_error_chain(&err);
+    }
+}
+
 pub fn eprint_error_chain(e: &dyn std::error::Error) {
     let mut out = std::io::stderr();
     write_error_chain_checked!(e, &mut out);
@@ -25,6 +34,8 @@ pub fn eprint_error_chain(e: &dyn std::error::Error) {
 pub fn log_error_chain(e: &dyn std::error::Error) {
     let mut err_bytes = Vec::with_capacity(16);
     write_error_chain_checked!(e, &mut err_bytes);
+    // We trim exactly one new line if present
+    // since log::error will output another newline
     let log_message = if err_bytes.ends_with(&['\n' as u8]) {
         &err_bytes[0..(err_bytes.len() - 1)]
     } else {
