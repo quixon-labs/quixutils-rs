@@ -10,7 +10,7 @@ Common helpers and utils
 - Common iterators
 - Future based timer helpers
 
-## Deprecated in 0.12x
+#### Removed (for now) in 0.12x
 
 - ApiError
 - actix & actix web utils
