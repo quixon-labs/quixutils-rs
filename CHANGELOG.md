@@ -7,10 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.13.0] - 2019-10-11
 
-- Clean up `error` module
-- Rename -> `error::print_*` to `error::write_*` except for top level
-- Introduce `error::log_error*`
-- Discourage the use of `::Result` alias, as it's provided by anyhow.
+- Renamed: `errors::print_on_error` and `print_error` -> `eprint*`
+- Renamed: Other `print_*` to `write_*`
+- Added: `errors::log_error*`
+- Changed: `errors::write_*` functions return `Result` similar to rust conventions
+- Changed: `print_*` panics if write ends errors, similar to std `println`
+- Docs: Discourage the use of `::Result` alias, as it's provided by `anyhow`.
 
 ## [0.12.5] - 2019-10-11
 
