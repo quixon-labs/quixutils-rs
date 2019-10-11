@@ -5,7 +5,7 @@ macro_rules! write_error_chain_checked {
         if let Err(e) = crate::errors::write_error_chain($e, $to) {
             panic!("failed to write: {:?}", e);
         }
-    }
+    };
 }
 
 pub fn eprint_on_error<T, E>(result: std::result::Result<T, E>)
