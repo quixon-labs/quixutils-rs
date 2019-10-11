@@ -8,21 +8,21 @@ macro_rules! write_error_chain_checked {
     };
 }
 
-pub fn eprint_on_error<T, E>(result: std::result::Result<T, E>)
+pub fn eprint_on_error<T, E>(result: &std::result::Result<T, E>)
 where
     E: std::error::Error,
 {
     if let Err(err) = result {
-        eprint_error_chain(&err);
+        eprint_error_chain(err);
     }
 }
 
-pub fn log_on_error<T, E>(result: std::result::Result<T, E>)
+pub fn log_on_error<T, E>(result: &std::result::Result<T, E>)
 where
     E: std::error::Error,
 {
     if let Err(err) = result {
-        log_error_chain(&err);
+        log_error_chain(err);
     }
 }
 
