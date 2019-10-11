@@ -5,9 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.13.0] - 2019-10-11
 
-- None
+- Clean up `error` module
+- Rename -> `error::print_*` to `error::write_*` except for top level
+- Introduce `error::log_error*`
+- Discourage the use of `::Result` alias, as it's provided by anyhow.
 
 ## [0.12.5] - 2019-10-11
 
